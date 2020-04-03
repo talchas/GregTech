@@ -1,5 +1,7 @@
 package gregtech.common.items.behaviors;
 
+import gregtech.api.util.GTUtility;
+
 import gregtech.api.capability.GregtechTileCapabilities;
 import gregtech.api.cover.ICoverable;
 import gregtech.api.items.metaitem.stats.IItemBehaviour;
@@ -49,7 +51,7 @@ public class CrowbarBehaviour implements IItemBehaviour {
             }
             TileEntity tileEntity = world.getTileEntity(blockPos);
             ICoverable coverable = tileEntity == null ? null : tileEntity.getCapability(GregtechTileCapabilities.CAPABILITY_COVERABLE, null);
-            EnumFacing coverSide = coverable == null ? null : ICoverable.rayTraceCoverableSide(coverable, player);
+            EnumFacing coverSide = coverable == null ? null : GTUtility.determineWrenchingSide(side, hitX, hitY, hitZ);
             if (coverSide != null && coverable.getCoverAtSide(coverSide) != null) {
                 if (world.isRemote) {
                     //always return success on client side

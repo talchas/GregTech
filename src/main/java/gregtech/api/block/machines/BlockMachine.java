@@ -1,5 +1,7 @@
 package gregtech.api.block.machines;
 
+import gregtech.api.util.GTUtility;
+
 import codechicken.lib.block.property.unlisted.UnlistedIntegerProperty;
 import codechicken.lib.block.property.unlisted.UnlistedStringProperty;
 import codechicken.lib.raytracer.CuboidRayTraceResult;
@@ -247,7 +249,7 @@ public class BlockMachine extends BlockCustomParticle implements ITileEntityProv
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         MetaTileEntity metaTileEntity = getMetaTileEntity(worldIn, pos);
-        CuboidRayTraceResult rayTraceResult = (CuboidRayTraceResult) RayTracer.retraceBlock(worldIn, playerIn, pos);
+        CuboidRayTraceResult rayTraceResult = GTUtility.fakeRaytrace(pos, facing, hitX, hitY, hitZ);
         ItemStack itemStack = playerIn.getHeldItem(hand);
         if (metaTileEntity == null || rayTraceResult == null) {
             return false;

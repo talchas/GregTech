@@ -1,6 +1,10 @@
 package gregtech.api.util;
 
 
+import codechicken.lib.raytracer.CuboidRayTraceResult;
+import codechicken.lib.raytracer.IndexedCuboid6;
+import codechicken.lib.vec.Cuboid6;
+import codechicken.lib.vec.Vector3;
 import com.google.common.collect.Lists;
 import gregtech.api.capability.GregtechCapabilities;
 import gregtech.api.capability.IElectricItem;
@@ -644,5 +648,9 @@ public class GTUtility {
             }
             return worldPower;
         }
+    }
+
+    public static CuboidRayTraceResult fakeRaytrace(BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        return new CuboidRayTraceResult(new Vector3(hitX + pos.getX(), hitY + pos.getY(), hitZ + pos.getZ()), pos, facing, new IndexedCuboid6(null, new Cuboid6()), 0.0);
     }
 }

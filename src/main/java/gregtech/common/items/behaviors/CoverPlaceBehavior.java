@@ -1,5 +1,7 @@
 package gregtech.common.items.behaviors;
 
+import gregtech.api.util.GTUtility;
+
 import gregtech.api.capability.GregtechTileCapabilities;
 import gregtech.api.cover.CoverDefinition;
 import gregtech.api.cover.ICoverable;
@@ -28,7 +30,8 @@ public class CoverPlaceBehavior implements IItemBehaviour {
         if (coverable == null) {
             return EnumActionResult.PASS;
         }
-        EnumFacing coverSide = ICoverable.rayTraceCoverableSide(coverable, player);
+        EnumFacing coverSide = GTUtility.determineWrenchingSide(side, hitX, hitY, hitZ);
+//ICoverable.rayTraceCoverableSide(coverable, player);
         if (coverable.getCoverAtSide(coverSide) != null || !coverable.canPlaceCoverOnSide(coverSide)) {
             return EnumActionResult.PASS;
         }
