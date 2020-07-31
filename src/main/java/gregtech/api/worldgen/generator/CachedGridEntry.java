@@ -83,8 +83,6 @@ public class CachedGridEntry implements GridEntryInfo, IBlockGeneratorAccess, IB
         long worldSeed = world.getSeed();
         this.gridRandom = new XSTR(31 * 31 * gridX + gridZ * 31 + Long.hashCode(worldSeed));
 
-        System.out.printf("%d %d (%d): coming from %d %d\n", gridX, gridZ, world.provider.getDimension(), primerChunkX, primerChunkZ);
-
         int gridSizeX = WorldGeneratorImpl.GRID_SIZE_X * 16;
         int gridSizeZ = WorldGeneratorImpl.GRID_SIZE_Z * 16;
         BlockPos blockPos = new BlockPos(gridX * gridSizeX + gridSizeX / 2, world.getActualHeight(), gridZ * gridSizeZ + gridSizeZ / 2);
@@ -98,8 +96,6 @@ public class CachedGridEntry implements GridEntryInfo, IBlockGeneratorAccess, IB
             BlockPos heightSpot = findOptimalSpot(gridX, gridZ, primerChunkX, primerChunkZ);
             int masterHeight = world.getHeight(heightSpot).getY();
             int masterBottomHeight = world.getTopSolidOrLiquidBlock(heightSpot).getY();
-            System.out.printf("%d %d (%d): master init %d/%d from %d,%d,%d\n", gridX, gridZ, world.provider.getDimension(), masterHeight, masterBottomHeight,
-                              heightSpot.getX(),heightSpot.getY(),heightSpot.getZ());
 
             this.masterEntry = primerChunk.getCapability(GTWorldGenCapability.CAPABILITY, null);
             this.masterEntry = new GTWorldGenCapability();
@@ -126,9 +122,7 @@ public class CachedGridEntry implements GridEntryInfo, IBlockGeneratorAccess, IB
             }
         }
 
-        return mostClosePos;
-
-        //return new BlockPos(chunkBaseX + mostClosePos.getX(), 0, chunkBaseZ + mostClosePos.getZ());
+        return new BlockPos(chunkBaseX + mostClosePos.getX(), 0, chunkBaseZ + mostClosePos.getZ());
     }
 
     private GTWorldGenCapability searchMasterOrNull(World world) {
@@ -241,17 +235,14 @@ public class CachedGridEntry implements GridEntryInfo, IBlockGeneratorAccess, IB
         int maximumHeight = Math.min(masterEntry.getMaxBottomHeight(), currentOreVein.getHeightLimit()[1] - topHeightOffset);
         int minimumHeight = Math.max(3, currentOreVein.getHeightLimit()[0]);
 
+        int diff = maximumHeight - minimumHeight;
+        if (diff <= 0)
+            diff = 1;
 
-        if (minimumHeight >= maximumHeight) {
-            System.out.printf("%d %d: %s failed %d >= %d (%d-%d/%d vs %d)\n", gridX, gridZ, definition.getDepositName(), minimumHeight, maximumHeight,
-                              currentOreVein.getHeightLimit()[0], currentOreVein.getHeightLimit()[1], masterEntry.getMaxBottomHeight(), topHeightOffset);
-
-            return;
-        }
         this.veinCenterX = calculateVeinCenterX();
-        this.veinCenterY = minimumHeight + gridRandom.nextInt(maximumHeight - minimumHeight);
+        this.veinCenterY = minimumHeight + gridRandom.nextInt(diff);
         this.veinCenterZ = calculateVeinCenterZ();
-        System.out.printf("%d %d: %s success %d,%d,%d\n", gridX, gridZ, definition.getDepositName(), veinCenterX, veinCenterY, veinCenterZ);
+
         this.currentOreVein.getShapeGenerator().generate(gridRandom, this);
         this.veinGeneratedMap.put(definition, new BlockPos(veinCenterX, veinCenterY, veinCenterZ));
         IVeinPopulator veinPopulator = currentOreVein.getVeinPopulator();
