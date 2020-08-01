@@ -173,7 +173,6 @@ public class MetaTileEntityWorkbench extends MetaTileEntity {
         CraftingRecipeResolver recipeResolver = getRecipeResolver();
 
         widgetGroup.addWidget(new ImageWidget(88-13, 44-13, 26, 26, GuiTextures.SLOT));
-        widgetGroup.addWidget(new CraftingSlotWidget(recipeResolver, 0, 88-9, 44-9));
 
         //crafting grid
         for(int i = 0; i < 3; ++i) {
@@ -225,6 +224,7 @@ public class MetaTileEntityWorkbench extends MetaTileEntity {
         tabGroup.addTab(new ItemTabInfo("gregtech.machine.workbench.tab.item_list", new ItemStack(Blocks.CHEST)), createItemListTab());
         builder.widget(tabGroup);
 
+        builder.widget(new CraftingSlotWidget(getRecipeResolver(), 0, 88-9, 44-9));
         return builder.build(getHolder(), entityPlayer);
     }
 }

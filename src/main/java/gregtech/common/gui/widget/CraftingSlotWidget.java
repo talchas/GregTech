@@ -40,7 +40,7 @@ public class CraftingSlotWidget extends SlotWidget implements IRecipeTransferHan
             int ingredientAmount = buffer.readVarInt();
             try {
                 for (int i = 0; i < ingredientAmount; i++) {
-                    ingredients.put(buffer.readVarInt(), buffer.readItemStack());
+                    ingredients.put(buffer.readVarInt() - 1, buffer.readItemStack());
                 }
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
